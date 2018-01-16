@@ -44,7 +44,6 @@ Public Class frmMain
 						' 检查不复制扩展名
 						For Each DoNotCopy In DoNotCopyList
 							If file.Split(".")(file.Split(".").Length - 1) = DoNotCopy Then
-								Exit For
 								Continue For
 							End If
 						Next
@@ -52,10 +51,11 @@ Public Class frmMain
 						Try
 							Dim flength = My.Computer.FileSystem.GetFileInfo(file).Length
 							FileList.Add(file, flength)
-						Catch
-							l1.message = "Searching Root Directory"
-							l1.type = "info"
+						Catch ex As Exception
+							l1.message = "Adding File """ & file & """ to List Failed : " & ex.Message
+							l1.type = "Error"
 							l1.time = Now.ToString
+							l1.position = "Add Files"
 							LogList.Add(l1)
 						End Try
 					Next
@@ -82,6 +82,7 @@ Public Class frmMain
 							My.Computer.FileSystem.CreateDirectory(USBCloneDir)
 						Catch ex As Exception
 							WriteErrLog(ex, "Creating Dir")
+							Exit Sub
 						End Try
 					End If
 
