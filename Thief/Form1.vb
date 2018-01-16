@@ -44,11 +44,20 @@ Public Class frmMain
 						' 检查不复制扩展名
 						For Each DoNotCopy In DoNotCopyList
 							If file.Split(".")(file.Split(".").Length - 1) = DoNotCopy Then
+								Exit For
 								Continue For
 							End If
 						Next
 						' 添加文件到列表
-						FileList.Add(file, My.Computer.FileSystem.GetFileInfo(file).Length)
+						Try
+							Dim flength = My.Computer.FileSystem.GetFileInfo(file).Length
+							FileList.Add(file, flength)
+						Catch
+							l1.message = "Searching Root Directory"
+							l1.type = "info"
+							l1.time = Now.ToString
+							LogList.Add(l1)
+						End Try
 					Next
 					' 遍历所有子目录
 					l1.message = "Searching Child Directories"
